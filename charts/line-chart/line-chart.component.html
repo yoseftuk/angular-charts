@@ -1,0 +1,6 @@
+<div class="chart-container" [ngStyle]="{backgroundColor: backgroundColor || '#fdffde',border: border || '1px solid black'}" #container>
+  <canvas #lineChartCanvas (mousemove)="reactOnHover($event)" (mouseleave)="removeInfoSpan()" style="margin:auto;background-color:white;border:1px solid black;">
+  </canvas>
+  <app-info-span-double [props]="spanState" [isShown]="showSpan" ></app-info-span-double>
+
+</div>

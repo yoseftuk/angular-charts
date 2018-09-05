@@ -1,0 +1,13 @@
+span.container{
+  pointer-events:none;
+  position:absolute;
+  color:white;
+  background-color:black;
+  border-radius:8px;
+  padding: 5px 9px;
+  transition: all 0.2s ease;
+  font-size: 12px;
+}
+.nowrap{
+  white-space: nowrap;
+}
