@@ -8,6 +8,12 @@ import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Outpu
 export class PieChartComponent implements OnInit, AfterViewInit {
 
   @Input() readData: [{color: string, value: number, label: string}];
+  // customisation props
+  @Input() width: number;
+  @Input() backgroundColor: string;
+  @Input() textColor: string;
+  @Input() border: string;
+  @Input() fontFamily: string;
 
   @ViewChild('pieChartCanvas') canvasRef: ElementRef;
   @ViewChild('container') containerRef: ElementRef;
@@ -30,7 +36,7 @@ export class PieChartComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.canvasWidth = 300;
+    this.canvasWidth = this.width || 300 ;
     this.fullSize = 0;
     for ( const d of this.readData) {
       const obj = {color: d.color, value: d.value, label: d.label, percent: 0, begin_angle: 0, enf_angle: 0};

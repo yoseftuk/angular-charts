@@ -1,5 +1,5 @@
-<div class="chart-container" [ngStyle]="{padding:'12px',display:'inline-block',backgroundColor:'#fdffde',border:'1px solid black',position:'relative',color:'black', fontFamily:'Arial',textAlign:'center'}" #container>
-  <canvas width="300" height="300" #pieChartCanvas (mousemove)="reactOnHover($event)" (mouseleave)="removeInfoSpan()" style="margin:auto">
+<div class="chart-container" [ngStyle]="{backgroundColor: backgroundColor || '#fdffde',border: border || '1px solid black', color: textColor || 'black', fontFamily: fontFamily || 'Arial'}" #container>
+  <canvas [width]="canvasWidth" [height]="canvasWidth" #pieChartCanvas (mousemove)="reactOnHover($event)" (mouseleave)="removeInfoSpan()" style="margin:auto">
   </canvas>
   <app-info-span [props]="spanState" [isShown]="showSpan" ></app-info-span>
   <div style="text-align:left">

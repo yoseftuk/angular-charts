@@ -6,4 +6,10 @@
 p{
   font-size: 12pt;
 }
+.chart-container{
+  padding:12px;
+  display:inline-block;
+  position:relative;
+  text-align: center;
+}
 
