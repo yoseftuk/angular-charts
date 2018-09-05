@@ -1,4 +1,4 @@
-# Bar Chart
+# Pie Chart
 
 ### Import the component
 add to the app.module.ts
