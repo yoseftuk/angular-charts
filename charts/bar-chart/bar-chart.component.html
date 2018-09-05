@@ -1,0 +1,9 @@
+<div class="chart-container" [ngStyle]="{backgroundColor: backgroundColor || '#fdffde',border: border || '1px solid black', color: textColor || 'black', fontFamily: fontFamily || 'Arial'}" #container>
+  <canvas [width]="canvasWidth" [height]="canvasWidth" #pieChartCanvas (mousemove)="reactOnHover($event)" (mouseleave)="removeInfoSpan()" style="margin:auto">
+  </canvas>
+  <app-info-span [props]="spanState" [isShown]="showSpan" ></app-info-span>
+  <div style="text-align:left">
+    <p *ngFor="let label of data"><span [ngStyle]="{backgroundColor:label.color}" class="color-div"></span>  {{label.label +' : '+label.value + '  ('+(label.percent)+'%)'}}</p>
+  </div>
+
+</div>
