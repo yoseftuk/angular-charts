@@ -1,0 +1,48 @@
+# Multiple Line Chart
+
+### Import the component
+add to the app.module.ts
+```js
+import { InfoSpanMultipleComponent } from './way/to/path/charts/components/info-span-multiple/info-span-multiple.component';
+import { MultipleLineChartComponent } from '.way/to/path/charts/multple-line-chart/multiple-line-chart.component';
+```
+
+and in the `@NgModule` -> `declarations:`
+```ts
+...
+InfoSpanMultipleComponent,
+MultipleLineChartComponent,
+...
+```
+
+### Create the Component
+
+required props:
+ - data
+  - type: array of literal objects, with variebles:
+     - 'x':Number,
+     - 'y':Array of numbers,
+- labelX
+  - type: string
+  - value: the name of the x label
+- labelsY
+  - type: array of strings
+  - value: the name of the y labels
+- colors
+  - type: array of strngs
+  - value: the color of the lines
+
+example:
+```jsx
+      <app-multiple-line-chart [colors]="['#2fad42','#abcdef','#fedcba']" 
+      [labelX]="'age'" [labelsY]="['years experience','label2','label3']"
+      [readData]="[{x: 37, y: [22,34,43]}, {x: 46, y: [83,23,34]}, {x: 50, y: [72,67,76]},
+      {x: 62, y: [80,82,76]}, {x: 70, y: [66,54,24]}, {x: 97, y: [43,34,56]}]">
+      </app-multiple-line-chart>
+```
+
+### Costumisation props
+
+ - background (string): set the background of the chart
+ - border (string): set the border of the chart
+ - height (number) set the height of the chart //the width is 100%
