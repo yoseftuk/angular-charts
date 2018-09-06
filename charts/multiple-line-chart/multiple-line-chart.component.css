@@ -1,0 +1,14 @@
+.color-div{
+  width:15px;
+  height:15px;
+  display:inline-block;
+}
+p{
+  font-size: 12pt;
+}
+.chart-container{
+  padding:12px;
+  position:relative;
+  text-align: center;
+}
+

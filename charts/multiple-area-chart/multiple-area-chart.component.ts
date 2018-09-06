@@ -1,16 +1,16 @@
 import {AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 
 @Component({
-  selector: 'app-line-chart',
-  templateUrl: './line-chart.component.html',
-  styleUrls: ['./line-chart.component.css']
+  selector: 'app-multiple-area-chart',
+  templateUrl: './multiple-area-chart.component.html',
+  styleUrls: ['./multiple-area-chart.component.css']
 })
-export class LineChartComponent implements OnInit, AfterViewInit {
+export class MultipleAreaChartComponent implements OnInit, AfterViewInit {
 
-  @Input() readData: [{ x: number, y: number }];
-  @Input() color: string;
+  @Input() readData: [{ x: number, y: [number] }];
+  @Input() colors: [string];
   @Input() labelX: string;
-  @Input() labelY: string;
+  @Input() labelsY: [string];
   // customisation props
   @Input() backgroundColor: string;
   @Input() border: string;
@@ -21,7 +21,7 @@ export class LineChartComponent implements OnInit, AfterViewInit {
   @ViewChild('container') containerRef: ElementRef;
 
   // span's props
-  spanState = {x: 0, y: 0, valueX: 0, valueY: 0, labelX: '', labelY: ''};
+  spanState = {x: 0, y: 0, valueX: 0, valuesY: [0], labelX: '', labelsY: ['']};
   showSpan = false;
 
   // helpers values
@@ -47,33 +47,33 @@ export class LineChartComponent implements OnInit, AfterViewInit {
 
     // initialize the helper values
     this.canvasHeight = this.height || 300;
-    this.startX = this.readData[0].x;
+    this.data = this.readData;
+    this.startX = this.data[0].x;
     this.maxValueY = 0;
     this.maxValueX = 0;
-    this.startY = this.readData[0].y;
-    this.data = this.readData;
+    this.startY = this.data[0].y[0];
+    for (const data of this.data) {
+      data.x -= this.startX;
+      if (data.x > this.maxValueX) {
+        this.maxValueX = data.x;
+      }
 
-    for (const i of this.data) {
-
-      if (i.y > this.maxValueY) {
-        this.maxValueY = i.y;
-      }
-      if (i.y < this.startY) {
-        this.startY = i.y;
-      }
-      if (i.x > this.maxValueX) {
-        this.maxValueX = i.x;
-      }
-      if (i.x < this.startX) {
-        this.startX = i.x;
+      for (const j of data.y) {
+        if (j > this.maxValueY) {
+          this.maxValueY = j;
+        }
+        if (j < this.startY) {
+          this.startY = j;
+        }
       }
     }
+    console.log(this.maxValueY, this.startY);
     for (const i of this.data) {
-      i.x -= this.startX;
-      i.percent = Math.floor(i.x / (this.maxValueX - this.startX) * 10000) / 100;
+      i.percent = Math.floor(i.x / this.maxValueX * 10000) / 100;
     }
 
     this.maxY = (this.maxValueY - this.startY) * 10 / 9;
+
   }
 
   ngAfterViewInit(): void {
@@ -97,41 +97,51 @@ export class LineChartComponent implements OnInit, AfterViewInit {
   writeCanvas() {
 
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    this.ctx.beginPath();
-    this.ctx.strokeStyle = this.color || '#4eb934';
-    this.ctx.fillStyle = this.color || '#3f962a';
+
     this.ctx.textAlign = 'center';
     this.ctx.strokeWidth = 4;
 
-    for (const data of this.data) {
-
-      // get the values
-      const pointHeight = (data.y - this.startY) / this.maxY;
-      const offsetX = ((this.canvas.width / 100) * data.percent);
-      const offsetY = this.canvasHeight - (this.canvasHeight * pointHeight);
-
-      // draw the line
-      this.ctx.lineTo(offsetX, offsetY);
-      this.ctx.stroke();
-
-      // set label x and y for find on mouse hover
-      data.offsetX = offsetX;
-      data.offsetY = offsetY;
-    }
-    this.ctx.closePath();
-
-
-    // draw the circle
-    for (const data of this.data) {
+    for (let j = 0; j < this.labelsY.length; j++) {
+      this.ctx.strokeStyle = this.colors[j];
+      this.ctx.fillStyle = this.colors[j];
       this.ctx.beginPath();
-      this.ctx.arc(data.offsetX, data.offsetY, 4, 0, 2 * Math.PI, false);
+      this.ctx.moveTo(0,this.canvas.height);
+
+      for (const data of this.data) {
+
+
+        // get the values
+        const pointHeight = (data.y[j] - this.startY) / this.maxY;
+        const offsetX = ((this.canvas.width / 100) * data.percent);
+        const offsetY = this.canvasHeight - (this.canvasHeight * pointHeight);
+
+        // draw the line
+        this.ctx.lineTo(offsetX, offsetY);
+        this.ctx.stroke();
+
+        // set label x and y for find on mouse hover
+        data.offsetX = offsetX;
+        data.offsetY = offsetY;
+      }
+
+      // fill the area of the chart
+      this.ctx.globalAlpha = this.areaOpacity || 0.3;
+      this.ctx.lineTo(this.canvas.width, this.canvas.height);
       this.ctx.fill();
       this.ctx.closePath();
+      this.ctx.globalAlpha = 1;
+
+      // draw the circle
+      for (let i = 0; i < this.data.length; i++) {
+        this.ctx.beginPath();
+        this.ctx.arc(this.data[i].offsetX, this.data[i].offsetY, 4, 0, 2 * Math.PI, false);
+        this.ctx.fill();
+        this.ctx.closePath();
+      }
     }
 
     // draw the labels
-
-    const xInterval = (this.maxValueX - this.startX) / 10;
+    const xInterval = this.maxValueX / 10;
     const yInterval = (this.maxValueY - this.startY) / 9;
     const startXLabel = this.data[0].x;
     this.ctx.strokeStyle = 'gray';
@@ -159,6 +169,7 @@ export class LineChartComponent implements OnInit, AfterViewInit {
       this.ctx.stroke();
 
       this.ctx.fillText('' + (Math.floor((this.startY + yInterval * i) * 100) / 100), 9, y);
+
     }
 
     this.ctx.closePath();
@@ -192,9 +203,9 @@ export class LineChartComponent implements OnInit, AfterViewInit {
         x: this.data[index].offsetX,
         y: this.data[index].offsetY,
         labelX: this.labelX,
-        labelY: this.labelY,
+        labelsY: this.labelsY,
         valueX: this.data[index].x + this.startX,
-        valueY: this.data[index].y
+        valuesY: this.data[index].y
       };
 
       this.showSpan = true;

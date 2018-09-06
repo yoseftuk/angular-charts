@@ -15,6 +15,7 @@ export class AreaChartComponent implements OnInit, AfterViewInit {
   @Input() backgroundColor: string;
   @Input() border: string;
   @Input() height: number;
+  @Input() areaOpacity: number;
 
   @ViewChild('areaChartCanvas') canvasRef: ElementRef;
   @ViewChild('container') containerRef: ElementRef;
@@ -102,6 +103,7 @@ export class AreaChartComponent implements OnInit, AfterViewInit {
     this.ctx.fillStyle = this.color || '#3f962a';
     this.ctx.textAlign = 'center';
     this.ctx.strokeWidth = 4;
+    this.ctx.moveTo(0, this.canvas.height);
 
     for (const data of this.data) {
 
@@ -118,7 +120,13 @@ export class AreaChartComponent implements OnInit, AfterViewInit {
       data.offsetX = offsetX;
       data.offsetY = offsetY;
     }
+    // fill the area of the chart
+    this.ctx.globalAlpha = this.areaOpacity || 0.3;
+    this.ctx.lineTo(this.canvas.width, this.canvas.height);
+    this.ctx.fill();
+
     this.ctx.closePath();
+    this.ctx.globalAlpha = 1;
 
 
     // draw the circle

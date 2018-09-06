@@ -1,0 +1,11 @@
+<span
+  #infoSpan class="container" *ngIf="isShown"
+  [ngStyle]="{left:(props.x - spanWidth / 2 )+'px',top:(props.y - spanHeight)+'px'}">
+  <span >
+    <span > {{props.labelX + ' : ' + props.valueX}} </span>
+  </span>
+  <div style="height:1px; background-color: white; margin: 3px 0;"></div>
+  <span *ngFor="let label of props.labelsY" class="nowrap">
+    {{label + ' : ' + props.valuesY[props.labelsY.indexOf(label)]}}
+  <br/></span>
+</span>
