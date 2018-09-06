@@ -7,3 +7,5 @@ an angular components for a different types of diagrams
  - [Bar Chart](./documentation/bar_chart.md)  
  - [Line Chart](./documentation/line_chart.md)  
  - [Area Chart](./documentation/area_chart.md)
+ - [Multiple Line Chart](./documentation/area_chart.md)
+ - [Multiple Area Chart](./documentation/area_chart.md)
